@@ -1,0 +1,14 @@
+name: "goods_srv"
+Port: 50051
+Host: "172.16.3.176"
+
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  user: "root"
+  password: "123123"
+  name: "muxue_goods"
+
+consul:
+  host: "172.16.3.176"
+  port: 8500 
