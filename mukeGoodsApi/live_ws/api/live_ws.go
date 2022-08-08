@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	uuid "github.com/satori/go.uuid"
 	"log"
 	"webApi/live_ws/api/handler"
 	"webApi/live_ws/forms"
@@ -9,13 +10,23 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 )
 
 var Msg = forms.Msg{}
 
-// login
+// WsPushInter 定义ws接口
+type WsPushInter interface {
+	WsPing()
+	WsPushMsg(forms.Msg)
+}
+
+// WsService 定义ws接口
+type WsService struct {
+	WsPush WsPushInter
+}
+
+// WsHandler websocket应用
 func WsHandler(c *gin.Context) {
 	// 升级为websocket
 	var err error
@@ -24,13 +35,16 @@ func WsHandler(c *gin.Context) {
 		log.Println(err)
 		return
 	}
-	// userC := &handler.Clients{Fc: &forms.Client{Id: fmt.Sprintf("%v", uuid.NewV4()), Ws: global.WsConn, UnSc: make(chan []byte)}}
-
-	// wsIn := WsPushService{}
-	// wsIn.WsPush = &handler.Clients{Fc: &forms.Client{Id: fmt.Sprintf("%v", uuid.NewV4()), Ws: global.WsConn, UnSc: make(chan []byte)}}
 
 	userC := &forms.Client{Id: fmt.Sprintf("%v", uuid.NewV4()), Ws: global.WsConn, UnSc: make(chan []byte)}
-	WsPush := handler.NewMsPush(&forms.Client{Id: fmt.Sprintf("%v", uuid.NewV4()), Ws: global.WsConn, UnSc: make(chan []byte)})
+	// 配置接口使用方
+	Ws := WsService{
+		WsPush: &handler.Clients{
+			Fc: userC,
+		},
+	}
+
+	//WsPush := handler.NewMsPush(&forms.Client{Id: fmt.Sprintf("%v", uuid.NewV4()), Ws: global.WsConn, UnSc: make(chan []byte)})
 
 	defer func() {
 		global.WsClients[userC] = false
@@ -45,9 +59,9 @@ func WsHandler(c *gin.Context) {
 		for {
 			select {
 			case <-global.Ping:
-				WsPush.WsPing()
+				Ws.WsPush.WsPing()
 			case <-global.PushMsg:
-				WsPush.WsPushMsg(Msg)
+				Ws.WsPush.WsPushMsg(Msg)
 			}
 		}
 	}()

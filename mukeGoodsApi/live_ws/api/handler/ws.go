@@ -9,26 +9,11 @@ import (
 	"go.uber.org/zap"
 )
 
-type MsPush interface {
-	WsPing()
-	WsPushMsg(forms.Msg)
-}
-
 type Clients struct {
 	Fc *forms.Client
 }
 
-// 初始化
-func NewMsPush(fc *forms.Client) MsPush {
-	return &Clients{
-		Fc: fc,
-	}
-}
-
 func (wsC *Clients) WsPing() {
-	// zap.S().Infof("show WsPing")
-
-	// <-Ping
 	PingStruct := struct {
 		Controller string         `json:"controller"`
 		Action     string         `json:"action"`
@@ -52,8 +37,8 @@ func (wsC *Clients) WsPushMsg(msg forms.Msg) {
 	comment := struct {
 		AccessUserToken string  `json:"accessUserToken"`
 		Content         string  `json:"content"`
-		Live_id         float64 `json:"live_id"`
-		User_id         float64 `json:"user_id"`
+		LiveId          float64 `json:"live_id"`
+		UserId          float64 `json:"user_id"`
 	}{}
 	// 解析评论结构
 	b, err := json.Marshal(&msg.Data)
@@ -75,8 +60,8 @@ func (wsC *Clients) WsPushMsg(msg forms.Msg) {
 		Status: 200,
 		Data: map[string]interface{}{
 			"type":    "comment",
-			"lid":     comment.Live_id,
-			"uid":     comment.User_id,
+			"lid":     comment.LiveId,
+			"uid":     comment.UserId,
 			"comment": comment.Content,
 		},
 	}
