@@ -9,6 +9,7 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/hashicorp/consul/api v1.12.0
 	github.com/mbobakov/grpc-consul-resolver v1.4.4
+	github.com/satori/go.uuid v1.2.0
 	go.uber.org/zap v1.21.0
 	google.golang.org/grpc v1.47.0
 	google.golang.org/protobuf v1.28.0

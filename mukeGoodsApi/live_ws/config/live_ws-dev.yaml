@@ -1,0 +1,21 @@
+name: "live_ws"
+webPort: 8024
+webHost: "172.16.3.176"
+user_srv: 
+  host: "127.0.0.1"
+  port: 50051
+  name: "live_srv"
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  username: "root"
+  password: "123123"
+
+jwt:
+  key: "!D2IQQkifrjWh$N9YpnH^9MeFtFoCTFH"
+
+
+consul:
+  host: "172.16.3.176"
+  port: 8500
+
