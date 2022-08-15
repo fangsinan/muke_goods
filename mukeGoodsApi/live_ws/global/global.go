@@ -1,12 +1,11 @@
 package global
 
 import (
+	ut "github.com/go-playground/universal-translator"
+	"github.com/gorilla/websocket"
 	"net/http"
 	"webApi/live_ws/config"
 	"webApi/live_ws/forms"
-
-	ut "github.com/go-playground/universal-translator"
-	"github.com/gorilla/websocket"
 )
 
 var (
@@ -22,8 +21,10 @@ var (
 	}
 )
 
+type ClientT map[*websocket.Conn]*forms.Client
+
 var (
 	Ping      = make(chan struct{}, 1024)
 	PushMsg   = make(chan struct{}, 1024)
-	WsClients = make(map[*forms.Client]bool)
+	WsClients = make(map[int]ClientT)
 )

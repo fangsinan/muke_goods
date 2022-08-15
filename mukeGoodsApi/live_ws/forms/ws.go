@@ -1,16 +1,20 @@
 package forms
 
-import "github.com/gorilla/websocket"
+import (
+	"github.com/gorilla/websocket"
+	"sync"
+)
 
-// read msg
+// Msg read msg
 type Msg struct {
 	Action string      `json:"action"`
 	Data   interface{} `json:"data"`
 }
 
-// 用户client
+// Client 用户client
 type Client struct {
-	Id   string
-	Ws   *websocket.Conn
-	UnSc chan []byte
+	Id      string
+	Ws      *websocket.Conn
+	IsValid bool
+	Mux     *sync.Mutex
 }
